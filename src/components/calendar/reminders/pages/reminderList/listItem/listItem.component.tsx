@@ -8,7 +8,7 @@ import {
 import { useStyles } from "./listItem.style";
 import { ReactComponent as ClockIcon } from "../../../../../assets/icons/clock-icon.svg";
 import { ReactComponent as PencilIcon } from "../../../../../assets/icons/pencil-icon.svg";
-import { reminderBeingEdited } from "../../../../../../presentation/pages/reminderCalendar/reminderCalendar.slice";
+import { setReminderBeingEdited } from "../../../../../../presentation/pages/reminderCalendar/reminderCalendar.slice";
 import { useAppDispatch } from "../../../../../../application/hooks";
 
 type ListItemProps = {
@@ -74,7 +74,7 @@ export function ListItem({
               </Typography>
             </Grid>
             <Tooltip className={classes.editButton} title="Edit reminder">
-              <IconButton onClick={() => dispatch(reminderBeingEdited(id))}>
+              <IconButton onClick={() => dispatch(setReminderBeingEdited(id))}>
                 <PencilIcon />
               </IconButton>
             </Tooltip>

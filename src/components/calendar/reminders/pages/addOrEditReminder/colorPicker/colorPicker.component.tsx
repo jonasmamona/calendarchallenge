@@ -4,11 +4,14 @@ import classNames from "classnames";
 import { colors } from "../../../../../../domain/reminder";
 
 type ColorPickerProps = {
-    selectedColor: string;
-    setSelectedColor : (color: string) => void;
+  selectedColor: string;
+  setSelectedColor: (color: string) => void;
 };
 
-export function ColorPicker({ selectedColor , setSelectedColor }: ColorPickerProps) {
+export function ColorPicker({
+  selectedColor,
+  setSelectedColor,
+}: ColorPickerProps) {
   const classes = useStyles();
 
   const colorSquare = (color: string): JSX.Element => {
@@ -18,7 +21,7 @@ export function ColorPicker({ selectedColor , setSelectedColor }: ColorPickerPro
         item
         xs={1}
         className={
-            selectedColor === color
+          selectedColor === color
             ? classNames(classes.cell, classes.selected)
             : classes.cell
         }
@@ -30,5 +33,18 @@ export function ColorPicker({ selectedColor , setSelectedColor }: ColorPickerPro
     );
   };
 
-  return <>{colors.map((color: string) => colorSquare(color))}</>;
+  return (
+    <Grid item xs={12} style={{ marginTop: "100px" }}>
+      <Grid
+        item
+        container
+        xs={12}
+        id="color-picker"
+        justifyContent="space-between"
+        alignItems="center"  
+      >
+        {colors.map((color: string) => colorSquare(color))}
+      </Grid>
+    </Grid>
+  );
 }

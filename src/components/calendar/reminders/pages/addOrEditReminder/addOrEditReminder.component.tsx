@@ -46,7 +46,7 @@ export function AddOrEditReminder({ isEditing }: AddOrEditReminderProps) {
   const selectedDate = useAppSelector(selectSelectedDate);
   const [selectedColor, setSelectedColor] = useState<string>("#C8E6C9");
   const dispatch = useAppDispatch();
-  const reminderBeingEdited = useAppSelector(selectReminderBeingEdited);
+  const setReminderBeingEdited = useAppSelector(selectReminderBeingEdited);
 
   const {
     register,
@@ -62,15 +62,15 @@ export function AddOrEditReminder({ isEditing }: AddOrEditReminderProps) {
   });
 
   useEffect(() => {
-    if (isEditing && reminderBeingEdited) {
-      setValue("title", reminderBeingEdited.title);
-      setValue("description", reminderBeingEdited.description);
-      setValue("date", reminderBeingEdited.date);
-      setValue("time", reminderBeingEdited.date);
-      setValue("color", reminderBeingEdited.color);
-      setSelectedColor(reminderBeingEdited.color);
+    if (isEditing && setReminderBeingEdited) {
+      setValue("title", setReminderBeingEdited.title);
+      setValue("description", setReminderBeingEdited.description);
+      setValue("date", setReminderBeingEdited.date);
+      setValue("time", setReminderBeingEdited.date);
+      setValue("color", setReminderBeingEdited.color);
+      setSelectedColor(setReminderBeingEdited.color);
     }
-  }, [reminderBeingEdited, isEditing, setValue]);
+  }, [setReminderBeingEdited, isEditing, setValue]);
 
   const submit = handleSubmit((data: ReminderForm) => {
     data.color = selectedColor as ReminderColor;
@@ -80,7 +80,7 @@ export function AddOrEditReminder({ isEditing }: AddOrEditReminderProps) {
 
     if (isEditing) {
       let reminder = EditReminder(
-        reminderBeingEdited!,
+        setReminderBeingEdited!,
         data.title,
         data.description,
         thisDate,
@@ -192,17 +192,7 @@ export function AddOrEditReminder({ isEditing }: AddOrEditReminderProps) {
             />
           </Grid>
         </MuiPickersUtilsProvider>
-        <Grid
-          item
-          container
-          xs={12}
-          justifyContent="space-between"
-          alignItems="center"
-          style={{ marginTop: "100px" }}
-        >
-          <Grid item xs={12}>
-            <Typography>Color</Typography>
-          </Grid>
+        <Grid item xs={12}>
           <ColorPicker
             selectedColor={selectedColor}
             setSelectedColor={setSelectedColor}
@@ -218,11 +208,11 @@ export function AddOrEditReminder({ isEditing }: AddOrEditReminderProps) {
           justifyContent="flex-end"
           className={classes.buttonContainer}
         >
-          {isEditing && reminderBeingEdited && (
+          {isEditing && setReminderBeingEdited && (
             <div className="deleteButton">
               <CustomButton
                 onClick={() =>
-                  dispatch(removeReminderFromList(reminderBeingEdited.id))
+                  dispatch(removeReminderFromList(setReminderBeingEdited.id))
                 }
                 background="Red"
                 text="Remove"

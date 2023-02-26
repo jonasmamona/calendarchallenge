@@ -7,7 +7,7 @@ interface ReminderCalendarState {
   currentDate: Date;
   selectedDate: Date;
   currentPage: ReminderPage;
-  reminderBeingEdited: Reminder | undefined;
+  setReminderBeingEdited: Reminder | undefined;
   reminders: Reminder[];
 }
 
@@ -15,7 +15,7 @@ const initialState: ReminderCalendarState = {
   currentDate: new Date(),
   selectedDate: new Date(),
   currentPage: "ReminderList",
-  reminderBeingEdited: undefined,
+  setReminderBeingEdited: undefined,
   reminders: [
   ],
 };
@@ -63,8 +63,8 @@ export const reminderCalendarSlice = createSlice({
       state.selectedDate = action.payload.date;
       state.currentPage = "ReminderList";
     },
-    reminderBeingEdited: (state, action: PayloadAction<string>) => {
-      state.reminderBeingEdited = state.reminders.find(
+    setReminderBeingEdited: (state, action: PayloadAction<string>) => {
+      state.setReminderBeingEdited = state.reminders.find(
         (reminder) => reminder.id === action.payload
       );
       state.currentPage = "EditReminder";
@@ -95,7 +95,7 @@ export const {
   goToAddReminder,
   addReminder,
   cancelAddingReminder,
-  reminderBeingEdited,
+  setReminderBeingEdited,
   saveEditedReminder,
   removeReminderFromList,
 } = reminderCalendarSlice.actions;
@@ -113,7 +113,7 @@ export const selectReminders = (state: RootState) =>
   state.reminderCalendar.reminders;
 
 export const selectReminderBeingEdited = (state: RootState) =>
-  state.reminderCalendar.reminderBeingEdited;
+  state.reminderCalendar.setReminderBeingEdited;
 
 export const returnToCurrentDate = (): AppThunk => (dispatch, getState) => {
   dispatch(setSelectedDate(selectCurrentDate(getState())));
