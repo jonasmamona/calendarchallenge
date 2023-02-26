@@ -14,6 +14,7 @@ export function ColorPicker({ selectedColor , setSelectedColor }: ColorPickerPro
   const colorSquare = (color: string): JSX.Element => {
     return (
       <Grid
+        key={color}
         item
         xs={1}
         className={

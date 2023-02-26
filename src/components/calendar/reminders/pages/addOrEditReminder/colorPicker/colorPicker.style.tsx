@@ -10,6 +10,7 @@ export const useStyles = makeStyles(() =>
       boxSizing: "border-box",
       marginTop: "-180px",
       margin: "4px",
+      transition: "transform 0.1s ease-in-out",
       "&:hover": {
         border: "1px solid black",
         transform: "scale(1.1)",

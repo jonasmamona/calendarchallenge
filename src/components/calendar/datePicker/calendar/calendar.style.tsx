@@ -21,7 +21,9 @@ export const useStyles = makeStyles(() =>
       },
     },
     button: {
+      transition: "transform 0.1s ease-in-out",
       "&:hover": {
+        transform: "scale(1.05)",
         background: "#FF465D",
       },
     },

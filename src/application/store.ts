@@ -1,11 +1,15 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import reminderCalendarReducer from '../presentation/pages/reminderCalendar/reminderCalendar.slice'
+import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import reminderCalendarReducer from "../presentation/pages/reminderCalendar/reminderCalendar.slice";
 
 export const store = configureStore({
   reducer: {
-    reminderCalendar : reminderCalendarReducer
-  }
-})
+    reminderCalendar: reminderCalendarReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;

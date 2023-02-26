@@ -1,23 +1,34 @@
 import { IsSameDay } from "./calendar";
+import { v4 as uuidv4 } from "uuid";
 
 type ReminderList = "ReminderList";
-type AddReminder = "AddReminder";
-type EditReminder = "EditReminder";
+type AddReminderPage = "AddReminder";
+type EditReminderPage = "EditReminder";
 
-export type ReminderPage = ReminderList | AddReminder | EditReminder;
+export type ReminderPage = ReminderList | AddReminderPage | EditReminderPage;
 
-export type Green = "#C8E6C9";
-export type Yellow = "#F5DD29";
-export type Orange = "#FFCC80";
-export type Red = "#EF9A9A";
-export type Purple = "#CD8DE5";
-export type Blue = "#5BA4CF";
-export type LightBlue = "#29CCE5";
-export type LightGreen = "#6DECA9";
-export type Pink = "#FF8ED4";
-export type Grey = "#BCAAA4";
+type Green = "#C8E6C9";
+type Yellow = "#F5DD29";
+type Orange = "#FFCC80";
+type Red = "#EF9A9A";
+type Purple = "#CD8DE5";
+type Blue = "#5BA4CF";
+type LightBlue = "#29CCE5";
+type LightGreen = "#6DECA9";
+type Pink = "#FF8ED4";
+type Grey = "#BCAAA4";
 
-export type ReminderColor = Green | Yellow | Orange | Red | Purple | Blue | LightBlue | LightGreen | Pink | Grey;
+export type ReminderColor =
+  | Green
+  | Yellow
+  | Orange
+  | Red
+  | Purple
+  | Blue
+  | LightBlue
+  | LightGreen
+  | Pink
+  | Grey;
 
 export const colors: ReminderColor[] = [
   "#C8E6C9",
@@ -31,7 +42,6 @@ export const colors: ReminderColor[] = [
   "#FF8ED4",
   "#BCAAA4",
 ];
-  
 
 export type Reminder = {
   id: string;
@@ -48,11 +58,15 @@ export function DoesReminderExistForDate(
   return reminders.some((reminder) => IsSameDay(reminder.date, date));
 }
 
+export function OrderRemindersByTime(reminders: Reminder[]): Reminder[] {
+  return reminders.sort((a, b) => a.date.getTime() - b.date.getTime());
+}
+
 export function GetRemindersForDate(
   date: Date,
   reminders: Reminder[]
 ): Reminder[] {
-  return reminders.filter((reminder) => IsSameDay(reminder.date, date));
+  return OrderRemindersByTime(reminders.filter((reminder) => IsSameDay(reminder.date, date)));
 }
 
 export function DoesThisDateHaveAReminder(
@@ -75,4 +89,35 @@ export function DoesThisDateHaveAReminderWithDayIndex(
   );
 
   return reminders.some((reminder) => IsSameDay(reminder.date, newDate));
+}
+
+export function CreateReminder(
+  title: string,
+  description: string,
+  date: Date,
+  color: ReminderColor
+): Reminder {
+  return {
+    id: uuidv4(),
+    title,
+    description,
+    date,
+    color,
+  };
+}
+
+export function EditReminder(
+  reminder: Reminder,
+  title: string,
+  description: string,
+  date: Date,
+  color: ReminderColor
+): Reminder {
+  return {
+    ...reminder,
+    title,
+    description,
+    date,
+    color,
+  };
 }

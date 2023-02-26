@@ -3,7 +3,7 @@ import { createStyles, makeStyles } from "@material-ui/core";
 export const useStyles = makeStyles(() =>
   createStyles({
     titleContainer: {
-      padding: "30px 30px 0px 30px",
+      padding: "30px 30px 0px 20px",
     },
     thinLine: {
       width: "100%",
@@ -44,31 +44,11 @@ export const useStyles = makeStyles(() =>
     buttonContainer: {
       marginTop: "-39px",
       marginBottom: "39px",
-      "& > *": {
-        height: "49px",
-        width: "123px",
-        fontFamily: "Open Sans",
-        fontWeight: 600,
-        fontSize: "16px",
-        lineHeight: "22px",
-      },
       "& > .cancelButton": {
-        background: "#626262",
-        color: "#FFFFFF",
         marginRight: "10px",
-        textTransform: "none",
-      },
-      "& > .saveButton": {
-        background: "#394ABC",
-        color: "#FFFFFF",
-        textTransform: "none",
       },
       "& > .deleteButton": {
-        background: "#D52222",
-        color: "#FFFFFF",
-        textTransform: "none",
-        float: "left",
-        marginRight: "38.1%"
+        marginRight: "38.1%",
       },
     },
   })

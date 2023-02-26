@@ -1,10 +1,4 @@
-import {
-  Button,
-  Grid,
-  InputLabel,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import { Grid, InputLabel, TextField, Typography } from "@material-ui/core";
 import { useStyles } from "./addOrEditReminder.style";
 import {
   addReminder,
@@ -21,9 +15,19 @@ import {
 import { getDateAsSentence } from "../../../../../domain/calendar";
 import { ColorPicker } from "./colorPicker/colorPicker.component";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { Reminder, ReminderColor } from "../../../../../domain/reminder";
-import { v4 as uuidv4 } from "uuid";
+import { Controller, useForm } from "react-hook-form";
+import {
+  CreateReminder,
+  EditReminder,
+  ReminderColor,
+} from "../../../../../domain/reminder";
+import { CustomButton } from "../../../../customButton/customButton.component";
+import {
+  KeyboardDatePicker,
+  KeyboardTimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 
 type AddOrEditReminderProps = {
   isEditing: boolean;
@@ -32,8 +36,8 @@ type AddOrEditReminderProps = {
 interface ReminderForm {
   title: string;
   description: string;
-  date: string;
-  time: string;
+  date: Date;
+  time: Date;
   color: ReminderColor;
 }
 
@@ -49,17 +53,11 @@ export function AddOrEditReminder({ isEditing }: AddOrEditReminderProps) {
     handleSubmit,
     formState: { errors },
     setValue,
+    control,
   } = useForm<ReminderForm>({
     defaultValues: {
-      date: selectedDate.toLocaleDateString("en-US", {
-        month: "2-digit",
-        day: "2-digit",
-        year: "numeric",
-      }),
-      time:
-        selectedDate.getHours() +
-        ":" +
-        selectedDate.getMinutes().toString().padStart(2, "0"),
+      date: selectedDate,
+      time: selectedDate,
     },
   });
 
@@ -67,20 +65,8 @@ export function AddOrEditReminder({ isEditing }: AddOrEditReminderProps) {
     if (isEditing && reminderBeingEdited) {
       setValue("title", reminderBeingEdited.title);
       setValue("description", reminderBeingEdited.description);
-      setValue(
-        "date",
-        reminderBeingEdited.date.toLocaleDateString("en-US", {
-          month: "2-digit",
-          day: "2-digit",
-          year: "numeric",
-        })
-      );
-      setValue(
-        "time",
-        reminderBeingEdited.date.getHours() +
-          ":" +
-          reminderBeingEdited.date.getMinutes().toString().padStart(2, "0")
-      );
+      setValue("date", reminderBeingEdited.date);
+      setValue("time", reminderBeingEdited.date);
       setValue("color", reminderBeingEdited.color);
       setSelectedColor(reminderBeingEdited.color);
     }
@@ -89,21 +75,25 @@ export function AddOrEditReminder({ isEditing }: AddOrEditReminderProps) {
   const submit = handleSubmit((data: ReminderForm) => {
     data.color = selectedColor as ReminderColor;
     let thisDate = new Date(data.date);
-    thisDate.setHours(parseInt(data.time.split(":")[0]));
-    thisDate.setMinutes(parseInt(data.time.split(":")[1]));
+    thisDate.setHours(data.time.getHours());
+    thisDate.setMinutes(data.time.getMinutes());
 
-    let id = reminderBeingEdited ? reminderBeingEdited?.id : uuidv4();
-
-    let reminder: Reminder = {
-      id: id,
-      title: data.title,
-      description: data.description,
-      date: thisDate,
-      color: data.color,
-    };
     if (isEditing) {
+      let reminder = EditReminder(
+        reminderBeingEdited!,
+        data.title,
+        data.description,
+        thisDate,
+        data.color
+      );
       dispatch(saveEditedReminder(reminder));
     } else {
+      let reminder = CreateReminder(
+        data.title,
+        data.description,
+        thisDate,
+        data.color
+      );
       dispatch(addReminder(reminder));
     }
   });
@@ -143,35 +133,65 @@ export function AddOrEditReminder({ isEditing }: AddOrEditReminderProps) {
             minRows={2}
             maxRows={2}
             InputLabelProps={{ shrink: true }}
-            {...register("description", { required: true })}
+            {...register("description", { required: "true" })}
             error={!!errors.description}
             helperText={errors.description ? "A description is required" : ""}
           />
         </Grid>
-        <Grid item xs={6}>
-          <InputLabel htmlFor="date">Date</InputLabel>
-          <TextField
-            variant="outlined"
-            id="date"
-            fullWidth
-            InputLabelProps={{ shrink: true }}
-            {...register("date", { required: true })}
-            error={!!errors.date}
-            helperText={errors.date ? "Date is required" : ""}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <InputLabel htmlFor="time">Time</InputLabel>
-          <TextField
-            variant="outlined"
-            id="time"
-            fullWidth
-            InputLabelProps={{ shrink: true }}
-            {...register("time", { required: true })}
-            error={!!errors.time}
-            helperText={errors.time ? "Time is required" : ""}
-          />
-        </Grid>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <Grid item xs={6}>
+            <InputLabel htmlFor="date">Date</InputLabel>
+            <Controller
+              control={control}
+              name="date"
+              render={({ field }) => (
+                <KeyboardDatePicker
+                  {...field}
+                  ref={null}
+                  fullWidth
+                  inputVariant="outlined"
+                  format="MM/dd/yyyy"
+                  error={!!errors.date}
+                  helperText={errors.date ? errors.date.message : ""}
+                />
+              )}
+              rules={{
+                required: true,
+                pattern: {
+                  value:
+                    /^(0[1-9]|1[012])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d\d$/,
+                  message: "Invalid date",
+                },
+              }}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <InputLabel htmlFor="time">Time</InputLabel>
+            <Controller
+              control={control}
+              name="time"
+              render={({ field }) => (
+                <KeyboardTimePicker
+                  {...field}
+                  ref={null}
+                  fullWidth
+                  inputVariant="outlined"
+                  format="HH:mm"
+                  error={!!errors.time}
+                  helperText={errors.time ? errors.time.message : ""}
+                />
+              )}
+              rules={{
+                required: true,
+                pattern: {
+                  value: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/,
+                  message:
+                    "Hours must be between 0 and 23, and minutes between 0 and 59",
+                },
+              }}
+            />
+          </Grid>
+        </MuiPickersUtilsProvider>
         <Grid
           item
           container
@@ -199,25 +219,31 @@ export function AddOrEditReminder({ isEditing }: AddOrEditReminderProps) {
           className={classes.buttonContainer}
         >
           {isEditing && reminderBeingEdited && (
-            <Button
-              className="deleteButton"
-              onClick={() =>
-                dispatch(removeReminderFromList(reminderBeingEdited.id))
-              }
-            >
-              Remove
-            </Button>
+            <div className="deleteButton">
+              <CustomButton
+                onClick={() =>
+                  dispatch(removeReminderFromList(reminderBeingEdited.id))
+                }
+                background="Red"
+                text="Remove"
+                width="Medium"
+              />
+            </div>
           )}
-
-          <Button
-            className="cancelButton"
-            onClick={() => dispatch(cancelAddingReminder())}
-          >
-            Cancel
-          </Button>
-          <Button className="saveButton" onClick={() => submit()}>
-            Save
-          </Button>
+          <div className="cancelButton">
+            <CustomButton
+              onClick={() => dispatch(cancelAddingReminder())}
+              background="Grey"
+              text="Cancel"
+              width="Medium"
+            />
+          </div>
+          <CustomButton
+            onClick={() => submit()}
+            background="Blue"
+            text="Save"
+            width="Medium"
+          />
         </Grid>
       </Grid>
     </>

@@ -16,7 +16,8 @@ const initialState: ReminderCalendarState = {
   selectedDate: new Date(),
   currentPage: "ReminderList",
   reminderBeingEdited: undefined,
-  reminders: [],
+  reminders: [
+  ],
 };
 
 export const reminderCalendarSlice = createSlice({
@@ -59,6 +60,7 @@ export const reminderCalendarSlice = createSlice({
     },
     addReminder: (state, action: PayloadAction<Reminder>) => {
       state.reminders.push(action.payload);
+      state.selectedDate = action.payload.date;
       state.currentPage = "ReminderList";
     },
     reminderBeingEdited: (state, action: PayloadAction<string>) => {
@@ -79,8 +81,7 @@ export const reminderCalendarSlice = createSlice({
         (reminder) => reminder.id !== action.payload
       );
       state.currentPage = "ReminderList";
-
-    }
+    },
   },
 });
 
@@ -96,7 +97,7 @@ export const {
   cancelAddingReminder,
   reminderBeingEdited,
   saveEditedReminder,
-  removeReminderFromList
+  removeReminderFromList,
 } = reminderCalendarSlice.actions;
 
 export const selectCurrentDate = (state: RootState) =>

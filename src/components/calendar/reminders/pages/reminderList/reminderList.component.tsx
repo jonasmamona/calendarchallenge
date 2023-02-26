@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import { useStyles } from "./reminderList.style";
 import {
   goToAddReminder,
@@ -12,6 +12,7 @@ import { getDateAsSentence } from "../../../../../domain/calendar";
 import { ListItem } from "./listItem/listItem.component";
 import { Reminder } from "../../../../../domain/reminder";
 import { ReactComponent as NoRemindersImage } from "../../../../assets/images/no-reminders.svg";
+import { CustomButton } from "../../../../customButton/customButton.component";
 
 type ReminderListProps = {
   reminderList: Reminder[];
@@ -37,12 +38,12 @@ export function ReminderList({ reminderList }: ReminderListProps) {
           </Typography>
         </Grid>
         <Grid item className={classes.addReminderButtonContainer}>
-          <Button
-            className="addReminderButton"
+          <CustomButton
+            background="Gradient"
+            width="Large"
+            text="Add reminder"
             onClick={() => dispatch(goToAddReminder())}
-          >
-            Add reminder
-          </Button>
+          />
         </Grid>
       </Grid>
       <Grid container item xs={12}>

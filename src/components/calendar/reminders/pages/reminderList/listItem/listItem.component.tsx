@@ -43,7 +43,7 @@ export function ListItem({
           </Grid>
           <Grid item xs={8}>
             <Typography className={classes.cardTitle}>{title}</Typography>
-            <Typography className={classes.cardDescription}>
+            <div className={classes.descriptionContainer}>
               {description.length > 100 ? (
                 <Tooltip title={description}>
                   <Typography className={classes.cardDescription}>
@@ -55,7 +55,7 @@ export function ListItem({
                   {description}
                 </Typography>
               )}
-            </Typography>
+            </div>
           </Grid>
           <Grid
             container

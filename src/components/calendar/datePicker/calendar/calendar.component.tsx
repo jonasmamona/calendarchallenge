@@ -2,7 +2,7 @@ import { Grid, IconButton, Tooltip, Typography } from "@material-ui/core";
 import {
   daysOfWeekShort,
   numberOfDaysInMonth,
-} from "../../../../domain/calendarConstants";
+} from "../../../../domain/calendar";
 import { useStyles } from "./calendar.style";
 import { useAppDispatch, useAppSelector } from "../../../../application/hooks";
 import {
@@ -46,17 +46,19 @@ export function Calendar() {
                 ? classes.selectedButton
                 : classes.button
             }
-            style={i > 9 ? { padding: "8px 3px 6px 3px", borderRadius: "50%" } : { padding: "8px 8px 6px 8px", borderRadius: "50%" }}
+            style={
+              i > 9
+                ? { padding: "8px 3px 6px 3px", borderRadius: "50%" }
+                : { padding: "8px 8px 6px 8px", borderRadius: "50%" }
+            }
             onClick={() => dispatch(goToDay(i))}
           >
-            <Typography className={classes.calendarDay}>
-              {i}
-              {DoesThisDateHaveAReminderWithDayIndex(
-                i,
-                selectedDate,
-                reminders
-              ) && <div className={classes.dot} />}
-            </Typography>
+            <Typography className={classes.calendarDay}>{i}</Typography>
+            {DoesThisDateHaveAReminderWithDayIndex(
+              i,
+              selectedDate,
+              reminders
+            ) && <div className={classes.dot} />}
           </IconButton>
         </Tooltip>
       </Grid>
@@ -70,9 +72,15 @@ export function Calendar() {
   }
 
   return (
-    <Grid item container xs={12} className={classes.calendarContainer}>
+    <Grid
+      item
+      container
+      wrap="nowrap"
+      xs={12}
+      className={classes.calendarContainer}
+    >
       <Grid item xs={1} />
-      <Grid item xs={10} wrap="nowrap" id="calendar-grid">
+      <Grid item xs={10} id="calendar-grid">
         {daysOfWeekShort.map((day) => (
           <Grid key={day} item>
             <p>{day.toUpperCase()}</p>{" "}

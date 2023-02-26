@@ -18,17 +18,17 @@ export function NavigationButtons() {
     <Grid item xs={12} className={classes.navigationButtonContainer}>
       <Tooltip title="Go back one month">
         <IconButton onClick={() => dispatch(subtractMonths(1))}>
-          <GoLeftArrow />
+          <GoLeftArrow className={classes.svgIcon}/>
         </IconButton>
       </Tooltip>
       <Tooltip title="Return to today">
         <IconButton onClick={() => dispatch(goBackToCurrentDate())}>
-          <ReturnToCurrentButton />
+          <ReturnToCurrentButton className={classes.svgIcon}/>
         </IconButton>
       </Tooltip>
       <Tooltip title="Advance one month">
         <IconButton onClick={() => dispatch(addMonthsToSelectedDate(1))}>
-          <GoRightArrow />
+          <GoRightArrow className={classes.svgIcon}/>
         </IconButton>
       </Tooltip>
     </Grid>

@@ -25,6 +25,9 @@ export const useStyles = makeStyles(() =>
       borderRadius: "100px",
       marginLeft: "12px",
     },
+    descriptionContainer: {
+      width:"95%"
+    },
     cardDescription: {
       marginTop: "10px",
       fontFamily: "Open Sans",
@@ -35,6 +38,7 @@ export const useStyles = makeStyles(() =>
       color: "#384042",
       maxHeight: "80px",
       width: "100%",
+      wordWrap: "break-word",
     },
     timeContainer: {
       height: "134px",
@@ -63,7 +67,9 @@ export const useStyles = makeStyles(() =>
       width: "36px",
       borderRadius: "50%",
       background: "linear-gradient(90deg, #3BC6FB 0%, #00FFCC 100%)",
+      transition: "transform 0.1s ease-in-out",
       "&:hover": {
+        transform: "scale(1.1)",
         background: "#00FFCC",
       },
     },
